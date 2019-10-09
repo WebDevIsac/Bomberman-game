@@ -16,13 +16,13 @@ void setup() {
   //String portName = Serial.list()[0];
   //myPort = new Serial(this, portName, 115200);
   
-  size(1000, 800); 
+  size(800, 800); 
   frameRate(30);
-  myMap = new Tile[25][20];
+  myMap = new Tile[19][19];
   l = width / float(myMap.length);
   
   p1 = new Index( 1, 1 );
-  p2 = new Index( 13, 11 );
+  p2 = new Index( 17, 17 );
   p1c = new boolean[5];
   p2c = new boolean[5];
   
@@ -32,11 +32,29 @@ void setup() {
 }
 
 void makeMap() {
-  for (int x = 0; x < 25; x++){
-   for (int y = 0; y < 20; y++){
-
+  println(myMap.length);
+  for (int x = 0; x < myMap.length; x++){
+    int t = 0;
+   for (int y = 0; y < 19; y++){
+     if (y == 0 || y == 18 || x == 0 || x == 18) {
+       t = 2;
+     }
+     else if ((y + 1) % 2 != 0 && y < 18 && (x + 1) % 2 != 0)  {
+       t = 2;
+     }
+     else if ((y != 1 || x != 1) && (y != 2 || x != 1) && (y != 1 || x != 2) && (y != 17 || x != 17) && (y != 16 || x != 17) && (y != 17 || x != 16)) {
+       if (abs((9-dist( x, y, 7, 6 )) * randomGaussian()) > 0.4 ) {
+         t = 1;
+       }
+       else {
+         t = 0;
+       }
+     }
+     else {
+       t = 0;
+     }
      
-     myMap[x][y] = new Tile(1);
+     myMap[x][y] = new Tile(t);
    }
   }
 }
