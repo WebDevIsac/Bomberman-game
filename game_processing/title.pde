@@ -10,8 +10,7 @@ class P1Bomb{
     else return false;
   }
   void plot(){
-    fill(0);
-    ellipse( (pos.i + 0.5) * l, (pos.j + 0.5) * l, l, l );
+    image(bombImg, ((pos.i + 0.5) * l) - 16, ((pos.j + 0.5) * l) - 24, l, l);
   }
 }
 class P2Bomb{
@@ -26,8 +25,7 @@ class P2Bomb{
     else return false;
   }
   void plot(){
-    fill(0);
-    ellipse( (pos.i + 0.5) * l, (pos.j + 0.5) * l, l, l );
+    image(bombImg, ((pos.i + 0.5) * l) - 16, ((pos.j + 0.5) * l) - 24, l, l);
   }
 }
 
@@ -44,11 +42,16 @@ class Tile{
   
   void plot() {
    switch (tipo) {
-     case 0: fill(#1CFF88); break;
-     case 1: fill(#FF831C); break;
-     case 2: fill(#5A5A5A); break;
+     case 0: 
+      image(pathImg, 0, 0, 45, 45);
+      break;
+     case 1: 
+      image(barrelImg, 0, 0, 45, 42);
+      break;
+     case 2: 
+      image(wallImg, 0, 0, 45, 45);
+      break;
    }
-   rect(0,0,l,l);
   }
 }
 

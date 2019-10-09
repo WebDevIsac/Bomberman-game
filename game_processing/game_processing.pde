@@ -1,6 +1,6 @@
 import processing.serial.*;
 
-Tile[][] mapa;
+Tile[][] map;
 float l;
 boolean[] p1c, p2c;
 ArrayList<P1Bomb> p1bombs;
@@ -15,41 +15,61 @@ int p1bomb = 0;
 int p2bomb = 0;
 
 Index p1, p2;
+
+PImage bombImg;
+PImage barrelImg;
+PImage wallImg;
+PImage pathImg;
+
 void setup() {
   //String portName = Serial.list()[0];
   //myPort = new Serial(this, portName, 115200);
   
-  size(800, 600); 
+  size(800, 800); 
   frameRate(30);
-  mapa = new Tile[20][20];
-  l = width / float(mapa.length);
+  map = new Tile[19][19];
+  l = width / float(map.length);
   
   p1 = new Index( 1, 1 );
-  p2 = new Index( 13, 11 );
+  p2 = new Index( map.length - 2, map[0].length - 2 );
   p1c = new boolean[5];
   p2c = new boolean[5];
-  
+
   p1bombs = new ArrayList();
   p2bombs = new ArrayList();
   
-  makeMapa();
+  bombImg = loadImage("bomb.png");
+  barrelImg = loadImage("barrel.png");
+  wallImg = loadImage("wall.png");
+  pathImg = loadImage("path.jpg");
+  
+  makeMap();
   
 }
 
-void makeMapa() {
-  PImage file = loadImage("mapa.png");
-  for (int x=0; x<mapa.length ; x++){
-   for (int y=0; y<mapa[0].length ; y++){
-     int t = 0;
-     color c = file.get(x,y);
-     if( c == color(0) ) t = 2;
-     else if( c == color(127) ) t = 1;
-     //else if( c == color(195) ) 
-     else if( c == color( 255 ) ){
-       if( abs((9-dist( x, y, 7, 6 )) * randomGaussian()) > 1.2 ) t = 1;
+void makeMap() {
+  for (int x = 0; x < map.length; x++){
+    int t = 0;
+   for (int y = 0; y < map[0].length; y++){
+     if (y == 0 || y == map[0].length - 1 || x == 0 || x == map.length - 1) {
+       t = 2;
      }
-     
-     mapa[x][y] = new Tile(t);
+     else if ((y + 1) % 2 != 0 && y < map[0].length - 1 && (x + 1) % 2 != 0)  {
+       t = 2;
+     }
+     else if ((y != 1 || x != 1) && (y != 2 || x != 1) && (y != 1 || x != 2) && (y != map[0].length - 2 || x != map.length - 2) && (y != map[0].length - 3 || x != map.length - 2) && (y != map[0].length - 2 || x != map.length - 3)) {
+       if (abs((9-dist( x, y, 7, 6 )) * randomGaussian()) > 0.4 ) {
+         t = 1;
+       }
+       else {
+         t = 0;
+       }
+     }
+     else {
+       t = 0;
+     }
+    //  image(bombImg, 16, 16, 32, 32);
+     map[x][y] = new Tile(t);
    }
   }
 }
@@ -62,11 +82,11 @@ void draw() {
   //    println(valString);
   // }
   
-  for (int x=0; x<mapa.length ; x++){
-    for (int y=0; y<mapa[0].length ; y++){
+  for (int x=0; x<map.length ; x++){
+    for (int y=0; y<map[0].length ; y++){
       pushMatrix();
       translate(x*l,y*l);
-      mapa[x][y].plot();
+      map[x][y].plot();
       popMatrix();
     }
   }
@@ -74,16 +94,16 @@ void draw() {
   //P1
   if( p1.i >= 0 ){
     if (p1c[0]) {
-      if (mapa[p1.i][p1.j-1].atravessavel()) p1.j--; 
+      if (map[p1.i][p1.j-1].atravessavel()) p1.j--; 
     }
     if (p1c[1]) {
-      if (mapa[p1.i][p1.j+1].atravessavel()) p1.j++; 
+      if (map[p1.i][p1.j+1].atravessavel()) p1.j++; 
     }
     if (p1c[2]) {
-      if (mapa[p1.i-1][p1.j].atravessavel()) p1.i--; 
+      if (map[p1.i-1][p1.j].atravessavel()) p1.i--; 
     }
     if (p1c[3]) {
-      if (mapa[p1.i+1][p1.j].atravessavel()) p1.i++; 
+      if (map[p1.i+1][p1.j].atravessavel()) p1.i++; 
     }
     if( p1c[4] && p1bomb == 0 ) {
       p1bombs.add( new P1Bomb( p1 ) );
@@ -96,16 +116,16 @@ void draw() {
   //P2
   if( p2.i >= 0 ){
     if (p2c[0]) {
-      if (mapa[p2.i][p2.j-1].atravessavel()) p2.j--; 
+      if (map[p2.i][p2.j-1].atravessavel()) p2.j--; 
     }
     if (p2c[1]) {
-      if (mapa[p2.i][p2.j+1].atravessavel()) p2.j++; 
+      if (map[p2.i][p2.j+1].atravessavel()) p2.j++; 
     }
     if (p2c[2]) {
-      if (mapa[p2.i-1][p2.j].atravessavel()) p2.i--; 
+      if (map[p2.i-1][p2.j].atravessavel()) p2.i--; 
     }
     if (p2c[3]) {
-      if (mapa[p2.i+1][p2.j].atravessavel()) p2.i++; 
+      if (map[p2.i+1][p2.j].atravessavel()) p2.i++; 
     }
     if( p2c[4] && p2bomb == 0){
       p2bombs.add( new P2Bomb( p2 ) );
@@ -130,7 +150,7 @@ void draw() {
             println("p1:" + player1score + "-" + "p2:" + player2score);
             // p1bombs.remove(0);
             p1 = new Index( 1, 1 );
-            makeMapa();
+            makeMap();
       }
       if( p2.i == p1bombs.get(i).pos.i &&
           abs( p2.j - p1bombs.get(i).pos.j ) <= 2 ){
@@ -139,7 +159,7 @@ void draw() {
             println("p1:" + player1score + "-" + "p2:" + player2score);
             // p1bombs.remove(0);
             p2 = new Index( 13, 11 );
-            makeMapa();
+            makeMap();
       }
       if( p1.j == p1bombs.get(i).pos.j &&
           abs( p1.i - p1bombs.get(i).pos.i ) <= 2 ){
@@ -148,7 +168,7 @@ void draw() {
             println("p1:" + player1score + "-" + "p2:" + player2score);
             // p1bombs.remove(0);
             p1 = new Index( 1, 1 );
-            makeMapa();
+            makeMap();
       }
       if( p2.j == p1bombs.get(i).pos.j &&
           abs( p2.i - p1bombs.get(i).pos.i ) <= 2 ){
@@ -157,23 +177,23 @@ void draw() {
             println("p1:" + player1score + "-" + "p2:" + player2score);
             // p1bombs.remove(0);
             p2 = new Index( 13, 11 );
-            makeMapa();
+            makeMap();
       }
       
       for(int x=-2; x <= 2; x++){
         if( x == 0 ) continue;
         int I = p1bombs.get(i).pos.i + x;
-        if( I < 0 || I > mapa.length-1 ) continue;
-        if( mapa[I][p1bombs.get(i).pos.j].tipo == 1 ){
-          mapa[I][p1bombs.get(i).pos.j].tipo = 0;
+        if( I < 0 || I > map.length-1 ) continue;
+        if( map[I][p1bombs.get(i).pos.j].tipo == 1 ){
+          map[I][p1bombs.get(i).pos.j].tipo = 0;
         }
       }
       for(int y=-2; y <= 2; y++){
         if( y == 0 ) continue;
         int J = p1bombs.get(i).pos.j + y;
-        if( J < 0 || J > mapa[0].length-1 ) continue;
-        if( mapa[p1bombs.get(i).pos.i][J].tipo == 1 ){
-          mapa[p1bombs.get(i).pos.i][J].tipo = 0;
+        if( J < 0 || J > map[0].length-1 ) continue;
+        if( map[p1bombs.get(i).pos.i][J].tipo == 1 ){
+          map[p1bombs.get(i).pos.i][J].tipo = 0;
         }
       }
       if(p1bomb == 1){
@@ -199,7 +219,7 @@ void draw() {
             println("p1:" + player1score + "-" + "p2:" + player2score);
             // p2bombs.remove(0);
             p1 = new Index( 1, 1 );
-            makeMapa();
+            makeMap();
       }
       if( p2.i == p2bombs.get(i).pos.i &&
           abs( p2.j - p2bombs.get(i).pos.j ) <= 2 ){
@@ -208,7 +228,7 @@ void draw() {
             println("p1:" + player1score + "-" + "p2:" + player2score);
             // p2bombs.remove(0);
             p2 = new Index( 13, 11 );
-            makeMapa();
+            makeMap();
       }
       if( p1.j == p2bombs.get(i).pos.j &&
           abs( p1.i - p2bombs.get(i).pos.i ) <= 2 ){
@@ -217,7 +237,7 @@ void draw() {
             println("p1:" + player1score + "-" + "p2:" + player2score);
             // p2bombs.remove(0);
             p1 = new Index( 1, 1 );
-            makeMapa();
+            makeMap();
       }
       if( p2.j == p2bombs.get(i).pos.j &&
           abs( p2.i - p2bombs.get(i).pos.i ) <= 2 ){
@@ -226,23 +246,23 @@ void draw() {
             println("p1:" + player1score + "-" + "p2:" + player2score);
             // p2bombs.remove(0);
             p2 = new Index( 13, 11 );
-            makeMapa();
+            makeMap();
       }
       
       for(int x=-2; x <= 2; x++){
         if( x == 0 ) continue;
         int I = p2bombs.get(i).pos.i + x;
-        if( I < 0 || I > mapa.length-1 ) continue;
-        if( mapa[I][p2bombs.get(i).pos.j].tipo == 1 ){
-          mapa[I][p2bombs.get(i).pos.j].tipo = 0;
+        if( I < 0 || I > map.length-1 ) continue;
+        if( map[I][p2bombs.get(i).pos.j].tipo == 1 ){
+          map[I][p2bombs.get(i).pos.j].tipo = 0;
         }
       }
       for(int y=-2; y <= 2; y++){
         if( y == 0 ) continue;
         int J = p2bombs.get(i).pos.j + y;
-        if( J < 0 || J > mapa[0].length-1 ) continue;
-        if( mapa[p2bombs.get(i).pos.i][J].tipo == 1 ){
-          mapa[p2bombs.get(i).pos.i][J].tipo = 0;
+        if( J < 0 || J > map[0].length-1 ) continue;
+        if( map[p2bombs.get(i).pos.i][J].tipo == 1 ){
+          map[p2bombs.get(i).pos.i][J].tipo = 0;
         }
       }
       if(p1bomb == 1){
