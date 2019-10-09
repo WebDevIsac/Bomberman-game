@@ -12,6 +12,8 @@ int val;
 
 Index p1, p2;
 
+PImage bombImg;
+
 void setup() {
   //String portName = Serial.list()[0];
   //myPort = new Serial(this, portName, 115200);
@@ -22,11 +24,13 @@ void setup() {
   l = width / float(myMap.length);
   
   p1 = new Index( 1, 1 );
-  p2 = new Index( 17, 17 );
+  p2 = new Index( myMap.length - 2, myMap[0].length - 2 );
   p1c = new boolean[5];
   p2c = new boolean[5];
   
   bombs = new ArrayList();
+
+  bombImg = loadImage("bomb.png");
   
   makeMap();
 }
@@ -35,14 +39,14 @@ void makeMap() {
   println(myMap.length);
   for (int x = 0; x < myMap.length; x++){
     int t = 0;
-   for (int y = 0; y < 19; y++){
-     if (y == 0 || y == 18 || x == 0 || x == 18) {
+   for (int y = 0; y < myMap[0].length; y++){
+     if (y == 0 || y == myMap[0].length - 1 || x == 0 || x == myMap.length - 1) {
        t = 2;
      }
-     else if ((y + 1) % 2 != 0 && y < 18 && (x + 1) % 2 != 0)  {
+     else if ((y + 1) % 2 != 0 && y < myMap[0].length - 1 && (x + 1) % 2 != 0)  {
        t = 2;
      }
-     else if ((y != 1 || x != 1) && (y != 2 || x != 1) && (y != 1 || x != 2) && (y != 17 || x != 17) && (y != 16 || x != 17) && (y != 17 || x != 16)) {
+     else if ((y != 1 || x != 1) && (y != 2 || x != 1) && (y != 1 || x != 2) && (y != myMap[0].length - 2 || x != myMap.length - 2) && (y != myMap[0].length - 3 || x != myMap.length - 2) && (y != myMap[0].length - 2 || x != myMap.length - 3)) {
        if (abs((9-dist( x, y, 7, 6 )) * randomGaussian()) > 0.4 ) {
          t = 1;
        }
@@ -53,7 +57,7 @@ void makeMap() {
      else {
        t = 0;
      }
-     
+    //  image(bombImg, 16, 16, 32, 32);
      myMap[x][y] = new Tile(t);
    }
   }

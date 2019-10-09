@@ -28,11 +28,19 @@ class Tile{
   
   void plot() {
    switch (tipo) {
-     case 0: fill(#1CFF88); break;
-     case 1: fill(#FF831C); break;
-     case 2: fill(#5A5A5A); break;
+     case 0: 
+      fill(#1CFF88); 
+      break;
+     case 1: 
+      fill(#FF831C); 
+      break;
+     case 2: 
+      fill(#5A5A5A); 
+      break;
    }
+  //  image(bombImg, 16, 16, 32, 32);
    rect(0,0,l,l);
+  //  image(bombImg, 0, 0);
   }
 }
 
