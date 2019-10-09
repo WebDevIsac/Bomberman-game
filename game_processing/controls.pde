@@ -27,10 +27,6 @@ void moveChar(String valString){
   if (keyCode == DOWN) p2c[1] = true; 
   if (keyCode == LEFT) p2c[2] = true; 
   if (keyCode == RIGHT) p2c[3] = true;
-  
-  
-  
-  
 }
 
 void keyReleased(){

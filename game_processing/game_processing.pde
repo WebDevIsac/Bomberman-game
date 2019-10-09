@@ -1,23 +1,25 @@
 import processing.serial.*;
 
-Tile[][] mapa;
+Tile[][] myMap;
 float l;
 boolean[] p1c, p2c;
 ArrayList<Bomb> bombs;
+
 Serial myPort;
 String arduinoString;
 String valString;
 int val;
 
 Index p1, p2;
+
 void setup() {
-  String portName = Serial.list()[0];
-  myPort = new Serial(this, portName, 115200);
+  //String portName = Serial.list()[0];
+  //myPort = new Serial(this, portName, 115200);
   
-  size(800, 600); 
+  size(1000, 800); 
   frameRate(30);
-  mapa = new Tile[20][20];
-  l = width / float(mapa.length);
+  myMap = new Tile[25][20];
+  l = width / float(myMap.length);
   
   p1 = new Index( 1, 1 );
   p2 = new Index( 13, 11 );
@@ -26,41 +28,32 @@ void setup() {
   
   bombs = new ArrayList();
   
-  makeMapa();
+  makeMap();
 }
 
-void makeMapa() {
-  PImage file = loadImage("mapa.png");
-  for (int x=0; x<mapa.length ; x++){
-   for (int y=0; y<mapa[0].length ; y++){
-     int t = 0;
-     color c = file.get(x,y);
-     if( c == color(0) ) t = 2;
-     else if( c == color(127) ) t = 1;
-     //else if( c == color(195) ) 
-     else if( c == color( 255 ) ){
-       if( abs((9-dist( x, y, 7, 6 )) * randomGaussian()) > 1.2 ) t = 1;
-     }
+void makeMap() {
+  for (int x = 0; x < 25; x++){
+   for (int y = 0; y < 20; y++){
+
      
-     mapa[x][y] = new Tile(t);
+     myMap[x][y] = new Tile(1);
    }
   }
 }
 
 void draw() {
   
-  if (myPort.available() > 0) {
-    
-     valString = myPort.readString();
-     moveChar(valString);
-     println(valString);
-  }
+  //if (myPort.available() > 0) {
+  //   valString = myPort.readString();
+  //   moveChar(valString);
+  //   println(valString);
+  //}
   
-  for (int x=0; x<mapa.length ; x++){
-    for (int y=0; y<mapa[0].length ; y++){
+  for (int x = 0; x < myMap.length; x++){
+    for (int y = 0; y < myMap[0].length; y++){
       pushMatrix();
       translate(x*l,y*l);
-      mapa[x][y].plot();
+      myMap[x][y].plot();
       popMatrix();
     }
   }
@@ -68,16 +61,16 @@ void draw() {
   //P1
   if( p1.i >= 0 ){
     if (p1c[0]) {
-      if (mapa[p1.i][p1.j-1].atravessavel()) p1.j--; 
+      if (myMap[p1.i][p1.j-1].atravessavel()) p1.j--; 
     }
     if (p1c[1]) {
-      if (mapa[p1.i][p1.j+1].atravessavel()) p1.j++; 
+      if (myMap[p1.i][p1.j+1].atravessavel()) p1.j++; 
     }
     if (p1c[2]) {
-      if (mapa[p1.i-1][p1.j].atravessavel()) p1.i--; 
+      if (myMap[p1.i-1][p1.j].atravessavel()) p1.i--; 
     }
     if (p1c[3]) {
-      if (mapa[p1.i+1][p1.j].atravessavel()) p1.i++; 
+      if (myMap[p1.i+1][p1.j].atravessavel()) p1.i++; 
     }
     if( p1c[4] ) bombs.add( new Bomb( p1 ) );
   }
@@ -86,16 +79,16 @@ void draw() {
   //P2
   if( p2.i >= 0 ){
     if (p2c[0]) {
-      if (mapa[p2.i][p2.j-1].atravessavel()) p2.j--; 
+      if (myMap[p2.i][p2.j-1].atravessavel()) p2.j--; 
     }
     if (p2c[1]) {
-      if (mapa[p2.i][p2.j+1].atravessavel()) p2.j++; 
+      if (myMap[p2.i][p2.j+1].atravessavel()) p2.j++; 
     }
     if (p2c[2]) {
-      if (mapa[p2.i-1][p2.j].atravessavel()) p2.i--; 
+      if (myMap[p2.i-1][p2.j].atravessavel()) p2.i--; 
     }
     if (p2c[3]) {
-      if (mapa[p2.i+1][p2.j].atravessavel()) p2.i++; 
+      if (myMap[p2.i+1][p2.j].atravessavel()) p2.i++; 
     }
     if( p2c[4] ) bombs.add( new Bomb( p2 ) );
   }
@@ -129,17 +122,17 @@ void draw() {
       for(int x=-2; x <= 2; x++){
         if( x == 0 ) continue;
         int I = bombs.get(i).pos.i + x;
-        if( I < 0 || I > mapa.length-1 ) continue;
-        if( mapa[I][bombs.get(i).pos.j].tipo == 1 ){
-          mapa[I][bombs.get(i).pos.j].tipo = 0;
+        if( I < 0 || I > myMap.length-1 ) continue;
+        if( myMap[I][bombs.get(i).pos.j].tipo == 1 ){
+          myMap[I][bombs.get(i).pos.j].tipo = 0;
         }
       }
       for(int y=-2; y <= 2; y++){
         if( y == 0 ) continue;
         int J = bombs.get(i).pos.j + y;
-        if( J < 0 || J > mapa[0].length-1 ) continue;
-        if( mapa[bombs.get(i).pos.i][J].tipo == 1 ){
-          mapa[bombs.get(i).pos.i][J].tipo = 0;
+        if( J < 0 || J > myMap[0].length-1 ) continue;
+        if( myMap[bombs.get(i).pos.i][J].tipo == 1 ){
+          myMap[bombs.get(i).pos.i][J].tipo = 0;
         }
       }
       bombs.remove(i);
