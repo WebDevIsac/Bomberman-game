@@ -1,3 +1,30 @@
+void moveChar(String valString){
+  if (valString.contains("UP")) {
+    p1c[0] = true;
+    delay(50);
+  }
+  else if (valString.contains("DOWN")) {
+    p1c[1] = true;
+    delay(50);
+  }
+  else if (valString.contains("LEFT")) {
+    p1c[2] = true;
+    delay(50);
+  }
+  else if (valString.contains("RIGHT")) {
+    p1c[3] = true;
+    delay(50);
+  }
+  
+  if (valString.contains("BOMB")) {
+    p1c[4] = true;
+    delay(50);
+  }
+    //case 'c':
+      //p1c[4] = true;
+      //break;
+}
+
 void keyPressed(){
   switch( key ){
     case 'w':
@@ -23,9 +50,6 @@ void keyPressed(){
   if (keyCode == DOWN) p2c[1] = true; 
   if (keyCode == LEFT) p2c[2] = true; 
   if (keyCode == RIGHT) p2c[3] = true;
-  
-  
-  
   
 }
 
