@@ -24,6 +24,9 @@ void keyPressed(){
   if (keyCode == LEFT) p2c[2] = true; 
   if (keyCode == RIGHT) p2c[3] = true;
   
+  
+  
+  
 }
 
 void keyReleased(){
