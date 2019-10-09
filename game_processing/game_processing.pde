@@ -51,20 +51,25 @@ void makeMap() {
   for (int x = 0; x < map.length; x++){
     int t = 0;
    for (int y = 0; y < map[0].length; y++){
+    // Setting up walls around map
      if (y == 0 || y == map[0].length - 1 || x == 0 || x == map.length - 1) {
        t = 2;
      }
+    // Setting up pillars on map
      else if ((y + 1) % 2 != 0 && y < map[0].length - 1 && (x + 1) % 2 != 0)  {
        t = 2;
      }
+    // Setting up barrels randomly on map
      else if ((y != 1 || x != 1) && (y != 2 || x != 1) && (y != 1 || x != 2) && (y != map[0].length - 2 || x != map.length - 2) && (y != map[0].length - 3 || x != map.length - 2) && (y != map[0].length - 2 || x != map.length - 3)) {
        if (abs((9-dist( x, y, 7, 6 )) * randomGaussian()) > 0.4 ) {
          t = 1;
        }
+      // Setting up path for all empty tiles
        else {
          t = 0;
        }
      }
+      //  Setting up path for all empty tiles
      else {
        t = 0;
      }
@@ -92,6 +97,7 @@ void draw() {
   }
   
   //P1
+  // Moving character
   if( p1.i >= 0 ){
     if (p1c[0]) {
       if (map[p1.i][p1.j-1].atravessavel()) p1.j--; 
@@ -105,6 +111,7 @@ void draw() {
     if (p1c[3]) {
       if (map[p1.i+1][p1.j].atravessavel()) p1.i++; 
     }
+    // Placing out bomb
     if( p1c[4] && p1bomb == 0 ) {
       p1bombs.add( new P1Bomb( p1 ) );
       p1bomb = 1;
@@ -114,6 +121,7 @@ void draw() {
     
   
   //P2
+  // Moving character
   if( p2.i >= 0 ){
     if (p2c[0]) {
       if (map[p2.i][p2.j-1].atravessavel()) p2.j--; 
@@ -127,6 +135,7 @@ void draw() {
     if (p2c[3]) {
       if (map[p2.i+1][p2.j].atravessavel()) p2.i++; 
     }
+    // Placing out bomb
     if( p2c[4] && p2bomb == 0){
       p2bombs.add( new P2Bomb( p2 ) );
       p2bomb = 1;
@@ -134,6 +143,7 @@ void draw() {
     }
   }
   
+  // Show players as ellipse at specific i and j positions. 
   fill( 0, 0, 255);
   ellipse( (p1.i + 0.5) * l, (p1.j + 0.5) * l, l, l);
   fill(255, 0, 0);
@@ -141,17 +151,17 @@ void draw() {
   
   for(int i = p1bombs.size()-1; i >= 0; --i ){
     p1bombs.get(i).plot();
-    if( p1bombs.get(i).explodiu() ){
-      
+    p1bombs.get(i).plot();
+    if( p1bombs.get(i).explode() ){
       if( p1.i == p1bombs.get(i).pos.i &&
           abs( p1.j - p1bombs.get(i).pos.j ) <= 2 ){
             p1 = new Index( -1, -1 );
             player2score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            if(p2bomb == 1){
+            if(p2bomb == 1) {
               p2bombs.remove(i);
               p2bomb = 0;
-            } 
+            }
             p1 = new Index( 1, 1 );
             makeMap();
       }
@@ -192,6 +202,7 @@ void draw() {
             makeMap();
       }
       
+      // Removing barrels and setting path instead
       for(int x=-2; x <= 2; x++){
         if( x == 0 ) continue;
         int I = p1bombs.get(i).pos.i + x;
@@ -208,6 +219,7 @@ void draw() {
           map[p1bombs.get(i).pos.i][J].tipo = 0;
         }
       }
+
       if(p1bomb == 1){
         p1bombs.remove(i);
         p1bomb = 0;
@@ -219,7 +231,7 @@ void draw() {
 
   for(int i = p2bombs.size()-1; i >= 0; --i ){
     p2bombs.get(i).plot();
-    if( p2bombs.get(i).explodiu() ){
+    if( p2bombs.get(i).explode() ){
       
       if( p1.i == p2bombs.get(i).pos.i &&
           abs( p1.j - p2bombs.get(i).pos.j ) <= 2 ){
