@@ -13,6 +13,9 @@ int val;
 Index p1, p2;
 
 PImage bombImg;
+PImage barrelImg;
+PImage wallImg;
+PImage pathImg;
 
 void setup() {
   //String portName = Serial.list()[0];
@@ -31,12 +34,15 @@ void setup() {
   bombs = new ArrayList();
 
   bombImg = loadImage("bomb.png");
+  barrelImg = loadImage("barrel.png");
+  // wallImg = loadImage("wall.png");
+  wallImg = loadImage("wall3.png");
+  pathImg = loadImage("wall2.jpg");
   
   makeMap();
 }
 
 void makeMap() {
-  println(myMap.length);
   for (int x = 0; x < myMap.length; x++){
     int t = 0;
    for (int y = 0; y < myMap[0].length; y++){

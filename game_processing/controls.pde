@@ -22,15 +22,10 @@ void moveChar(String valString){
     p1c[4] = true;
     delay(50);
   }
-    //case 'c':
-      //p1c[4] = true;
-      //break;
-
 }
 
 // Testing with keyboard
 void keyPressed(){
-  println(key);
   switch( key ){
     case 'w':
       p1c[0] = true;
