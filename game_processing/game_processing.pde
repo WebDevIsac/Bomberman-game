@@ -148,7 +148,10 @@ void draw() {
             p1 = new Index( -1, -1 );
             player2score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            // p1bombs.remove(0);
+            if(p2bomb == 1){
+              p2bombs.remove(i);
+              p2bomb = 0;
+            } 
             p1 = new Index( 1, 1 );
             makeMap();
       }
@@ -157,7 +160,10 @@ void draw() {
             p1 = new Index( -1, -1 );
             player2score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            // p1bombs.remove(0);
+            if(p2bomb == 1){
+              p2bombs.remove(i);
+              p2bomb = 0;
+            } 
             p1 = new Index( 1, 1 );
             makeMap();
       }
@@ -166,7 +172,10 @@ void draw() {
             p2 = new Index( -1, -1 );
             player1score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            // p1bombs.remove(0);
+            if(p2bomb == 1){
+              p2bombs.remove(i);
+              p2bomb = 0;
+            } 
             p2 = new Index( 17, 17 );
             makeMap();
       }
@@ -175,7 +184,10 @@ void draw() {
             p2 = new Index( -1, -1 );
             player1score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            // p1bombs.remove(0);
+            if(p2bomb == 1){
+              p2bombs.remove(i);
+              p2bomb = 0;
+            } 
             p2 = new Index( 17, 17 );
             makeMap();
       }
@@ -200,10 +212,7 @@ void draw() {
         p1bombs.remove(i);
         p1bomb = 0;
       }
-      if(p2bomb == 1){
-        p2bombs.remove(i);
-        p2bomb = 0;
-      } 
+
 
     }
   }
@@ -217,7 +226,10 @@ void draw() {
             p1 = new Index( -1, -1 );
             player2score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            // p2bombs.remove(0);
+            if(p1bomb == 1){
+              p1bombs.remove(i);
+              p1bomb = 0;
+            }
             p1 = new Index( 1, 1 );
             makeMap();
       }
@@ -226,7 +238,10 @@ void draw() {
             p1 = new Index( -1, -1 );
             player2score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            // p2bombs.remove(0);
+            if(p1bomb == 1){
+              p1bombs.remove(i);
+              p1bomb = 0;
+            }
             p1 = new Index( 1, 1 );
             makeMap();
       }
@@ -235,7 +250,10 @@ void draw() {
             p2 = new Index( -1, -1 );
             player1score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            // p2bombs.remove(0);
+            if(p1bomb == 1){
+              p1bombs.remove(i);
+              p1bomb = 0;
+            }
             p2 = new Index( 17, 17 );
             makeMap();
       }
@@ -244,7 +262,10 @@ void draw() {
             p2 = new Index( -1, -1 );
             player1score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            // p2bombs.remove(0);
+            if(p1bomb == 1){
+              p1bombs.remove(i);
+              p1bomb = 0;
+            }
             p2 = new Index( 17, 17 );
             makeMap();
       }
@@ -265,10 +286,10 @@ void draw() {
           map[p2bombs.get(i).pos.i][J].tipo = 0;
         }
       }
-      if(p1bomb == 1){
-        p1bombs.remove(i);
-        p1bomb = 0;
-      }
+      // if(p1bomb == 1){
+      //   p1bombs.remove(i);
+      //   p1bomb = 0;
+      // }
       if(p2bomb == 1){
         p2bombs.remove(i);
         p2bomb = 0;
