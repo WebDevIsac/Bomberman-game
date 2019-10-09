@@ -167,7 +167,7 @@ void draw() {
             player1score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
             // p1bombs.remove(0);
-            p2 = new Index( 18, 18 );
+            p2 = new Index( 17, 17 );
             makeMap();
       }
       else if( p2.j == p1bombs.get(i).pos.j &&
@@ -176,7 +176,7 @@ void draw() {
             player1score++;
             println("p1:" + player1score + "-" + "p2:" + player2score);
             // p1bombs.remove(0);
-            p2 = new Index( 18, 18 );
+            p2 = new Index( 17, 17 );
             makeMap();
       }
       
