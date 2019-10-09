@@ -1,14 +1,18 @@
 import processing.serial.*;
 
-Tile[][] myMap;
+Tile[][] map;
 float l;
 boolean[] p1c, p2c;
-ArrayList<Bomb> bombs;
-
+ArrayList<P1Bomb> p1bombs;
+ArrayList<P2Bomb> p2bombs;
 Serial myPort;
 String arduinoString;
 String valString;
 int val;
+int player1score = 0;
+int player2score = 0;
+int p1bomb = 0;
+int p2bomb = 0;
 
 Index p1, p2;
 
@@ -23,36 +27,37 @@ void setup() {
   
   size(800, 800); 
   frameRate(30);
-  myMap = new Tile[19][19];
-  l = width / float(myMap.length);
+  map = new Tile[19][19];
+  l = width / float(map.length);
   
   p1 = new Index( 1, 1 );
-  p2 = new Index( myMap.length - 2, myMap[0].length - 2 );
+  p2 = new Index( map.length - 2, map[0].length - 2 );
   p1c = new boolean[5];
   p2c = new boolean[5];
-  
-  bombs = new ArrayList();
 
+  p1bombs = new ArrayList();
+  p2bombs = new ArrayList();
+  
   bombImg = loadImage("bomb.png");
   barrelImg = loadImage("barrel.png");
-  // wallImg = loadImage("wall.png");
-  wallImg = loadImage("wall3.png");
-  pathImg = loadImage("wall2.jpg");
+  wallImg = loadImage("wall.png");
+  pathImg = loadImage("path.jpg");
   
   makeMap();
+  
 }
 
 void makeMap() {
-  for (int x = 0; x < myMap.length; x++){
+  for (int x = 0; x < map.length; x++){
     int t = 0;
-   for (int y = 0; y < myMap[0].length; y++){
-     if (y == 0 || y == myMap[0].length - 1 || x == 0 || x == myMap.length - 1) {
+   for (int y = 0; y < map[0].length; y++){
+     if (y == 0 || y == map[0].length - 1 || x == 0 || x == map.length - 1) {
        t = 2;
      }
-     else if ((y + 1) % 2 != 0 && y < myMap[0].length - 1 && (x + 1) % 2 != 0)  {
+     else if ((y + 1) % 2 != 0 && y < map[0].length - 1 && (x + 1) % 2 != 0)  {
        t = 2;
      }
-     else if ((y != 1 || x != 1) && (y != 2 || x != 1) && (y != 1 || x != 2) && (y != myMap[0].length - 2 || x != myMap.length - 2) && (y != myMap[0].length - 3 || x != myMap.length - 2) && (y != myMap[0].length - 2 || x != myMap.length - 3)) {
+     else if ((y != 1 || x != 1) && (y != 2 || x != 1) && (y != 1 || x != 2) && (y != map[0].length - 2 || x != map.length - 2) && (y != map[0].length - 3 || x != map.length - 2) && (y != map[0].length - 2 || x != map.length - 3)) {
        if (abs((9-dist( x, y, 7, 6 )) * randomGaussian()) > 0.4 ) {
          t = 1;
        }
@@ -64,24 +69,24 @@ void makeMap() {
        t = 0;
      }
     //  image(bombImg, 16, 16, 32, 32);
-     myMap[x][y] = new Tile(t);
+     map[x][y] = new Tile(t);
    }
   }
 }
 
 void draw() {
   
-  //if (myPort.available() > 0) {
-  //   valString = myPort.readString();
-  //   moveChar(valString);
-  //   println(valString);
-  //}
+  // if (myPort.available() > 0) { 
+  //    valString = myPort.readString();
+  //    moveChar(valString);
+  //    println(valString);
+  // }
   
-  for (int x = 0; x < myMap.length; x++){
-    for (int y = 0; y < myMap[0].length; y++){
+  for (int x=0; x<map.length ; x++){
+    for (int y=0; y<map[0].length ; y++){
       pushMatrix();
       translate(x*l,y*l);
-      myMap[x][y].plot();
+      map[x][y].plot();
       popMatrix();
     }
   }
@@ -89,36 +94,44 @@ void draw() {
   //P1
   if( p1.i >= 0 ){
     if (p1c[0]) {
-      if (myMap[p1.i][p1.j-1].atravessavel()) p1.j--; 
+      if (map[p1.i][p1.j-1].atravessavel()) p1.j--; 
     }
     if (p1c[1]) {
-      if (myMap[p1.i][p1.j+1].atravessavel()) p1.j++; 
+      if (map[p1.i][p1.j+1].atravessavel()) p1.j++; 
     }
     if (p1c[2]) {
-      if (myMap[p1.i-1][p1.j].atravessavel()) p1.i--; 
+      if (map[p1.i-1][p1.j].atravessavel()) p1.i--; 
     }
     if (p1c[3]) {
-      if (myMap[p1.i+1][p1.j].atravessavel()) p1.i++; 
+      if (map[p1.i+1][p1.j].atravessavel()) p1.i++; 
     }
-    if( p1c[4] ) bombs.add( new Bomb( p1 ) );
+    if( p1c[4] && p1bomb == 0 ) {
+      p1bombs.add( new P1Bomb( p1 ) );
+      p1bomb = 1;
+      print(p1bombs);
+    }
   }
     
   
   //P2
   if( p2.i >= 0 ){
     if (p2c[0]) {
-      if (myMap[p2.i][p2.j-1].atravessavel()) p2.j--; 
+      if (map[p2.i][p2.j-1].atravessavel()) p2.j--; 
     }
     if (p2c[1]) {
-      if (myMap[p2.i][p2.j+1].atravessavel()) p2.j++; 
+      if (map[p2.i][p2.j+1].atravessavel()) p2.j++; 
     }
     if (p2c[2]) {
-      if (myMap[p2.i-1][p2.j].atravessavel()) p2.i--; 
+      if (map[p2.i-1][p2.j].atravessavel()) p2.i--; 
     }
     if (p2c[3]) {
-      if (myMap[p2.i+1][p2.j].atravessavel()) p2.i++; 
+      if (map[p2.i+1][p2.j].atravessavel()) p2.i++; 
     }
-    if( p2c[4] ) bombs.add( new Bomb( p2 ) );
+    if( p2c[4] && p2bomb == 0){
+      p2bombs.add( new P2Bomb( p2 ) );
+      p2bomb = 1;
+      print(p2bombs);
+    }
   }
   
   fill( 0, 0, 255);
@@ -126,44 +139,141 @@ void draw() {
   fill(255, 0, 0);
   ellipse( (p2.i + 0.5) * l, (p2.j + 0.5) * l, l, l);
   
-  for(int i = bombs.size()-1; i >= 0; --i ){
-    bombs.get(i).plot();
-    if( bombs.get(i).explodiu() ){
+  for(int i = p1bombs.size()-1; i >= 0; --i ){
+    p1bombs.get(i).plot();
+    if( p1bombs.get(i).explodiu() ){
       
-      if( p1.i == bombs.get(i).pos.i &&
-          abs( p1.j - bombs.get(i).pos.j ) <= 2 ){
-        p1 = new Index( -1, -1 );
+      if( p1.i == p1bombs.get(i).pos.i &&
+          abs( p1.j - p1bombs.get(i).pos.j ) <= 2 ){
+            p1 = new Index( -1, -1 );
+            player2score++;
+            println("p1:" + player1score + "-" + "p2:" + player2score);
+            // p1bombs.remove(0);
+            p1 = new Index( 1, 1 );
+            makeMap();
       }
-      if( p2.i == bombs.get(i).pos.i &&
-          abs( p2.j - bombs.get(i).pos.j ) <= 2 ){
-        p2 = new Index( -1, -1 );
+      if( p2.i == p1bombs.get(i).pos.i &&
+          abs( p2.j - p1bombs.get(i).pos.j ) <= 2 ){
+            p2 = new Index( -1, -1 );
+            player1score++;
+            println("p1:" + player1score + "-" + "p2:" + player2score);
+            // p1bombs.remove(0);
+            p2 = new Index( 13, 11 );
+            makeMap();
       }
-      if( p1.j == bombs.get(i).pos.j &&
-          abs( p1.i - bombs.get(i).pos.i ) <= 2 ){
-        p1 = new Index( -1, -1 );
+      if( p1.j == p1bombs.get(i).pos.j &&
+          abs( p1.i - p1bombs.get(i).pos.i ) <= 2 ){
+            p1 = new Index( -1, -1 );
+            player2score++;
+            println("p1:" + player1score + "-" + "p2:" + player2score);
+            // p1bombs.remove(0);
+            p1 = new Index( 1, 1 );
+            makeMap();
       }
-      if( p2.j == bombs.get(i).pos.j &&
-          abs( p2.i - bombs.get(i).pos.i ) <= 2 ){
-        p2 = new Index( -1, -1 );
+      if( p2.j == p1bombs.get(i).pos.j &&
+          abs( p2.i - p1bombs.get(i).pos.i ) <= 2 ){
+            p2 = new Index( -1, -1 );
+            player1score++;
+            println("p1:" + player1score + "-" + "p2:" + player2score);
+            // p1bombs.remove(0);
+            p2 = new Index( 13, 11 );
+            makeMap();
       }
       
       for(int x=-2; x <= 2; x++){
         if( x == 0 ) continue;
-        int I = bombs.get(i).pos.i + x;
-        if( I < 0 || I > myMap.length-1 ) continue;
-        if( myMap[I][bombs.get(i).pos.j].tipo == 1 ){
-          myMap[I][bombs.get(i).pos.j].tipo = 0;
+        int I = p1bombs.get(i).pos.i + x;
+        if( I < 0 || I > map.length-1 ) continue;
+        if( map[I][p1bombs.get(i).pos.j].tipo == 1 ){
+          map[I][p1bombs.get(i).pos.j].tipo = 0;
         }
       }
       for(int y=-2; y <= 2; y++){
         if( y == 0 ) continue;
-        int J = bombs.get(i).pos.j + y;
-        if( J < 0 || J > myMap[0].length-1 ) continue;
-        if( myMap[bombs.get(i).pos.i][J].tipo == 1 ){
-          myMap[bombs.get(i).pos.i][J].tipo = 0;
+        int J = p1bombs.get(i).pos.j + y;
+        if( J < 0 || J > map[0].length-1 ) continue;
+        if( map[p1bombs.get(i).pos.i][J].tipo == 1 ){
+          map[p1bombs.get(i).pos.i][J].tipo = 0;
         }
       }
-      bombs.remove(i);
+      if(p1bomb == 1){
+        p1bombs.remove(i);
+        p1bomb = 0;
+      }
+      if(p2bomb == 1){
+        p2bombs.remove(i);
+        p2bomb = 0;
+      } 
+
+    }
+  }
+
+  for(int i = p2bombs.size()-1; i >= 0; --i ){
+    p2bombs.get(i).plot();
+    if( p2bombs.get(i).explodiu() ){
+      
+      if( p1.i == p2bombs.get(i).pos.i &&
+          abs( p1.j - p2bombs.get(i).pos.j ) <= 2 ){
+            p1 = new Index( -1, -1 );
+            player2score++;
+            println("p1:" + player1score + "-" + "p2:" + player2score);
+            // p2bombs.remove(0);
+            p1 = new Index( 1, 1 );
+            makeMap();
+      }
+      if( p2.i == p2bombs.get(i).pos.i &&
+          abs( p2.j - p2bombs.get(i).pos.j ) <= 2 ){
+            p2 = new Index( -1, -1 );
+            player1score++;
+            println("p1:" + player1score + "-" + "p2:" + player2score);
+            // p2bombs.remove(0);
+            p2 = new Index( 13, 11 );
+            makeMap();
+      }
+      if( p1.j == p2bombs.get(i).pos.j &&
+          abs( p1.i - p2bombs.get(i).pos.i ) <= 2 ){
+            p1 = new Index( -1, -1 );
+            player2score++;
+            println("p1:" + player1score + "-" + "p2:" + player2score);
+            // p2bombs.remove(0);
+            p1 = new Index( 1, 1 );
+            makeMap();
+      }
+      if( p2.j == p2bombs.get(i).pos.j &&
+          abs( p2.i - p2bombs.get(i).pos.i ) <= 2 ){
+            p2 = new Index( -1, -1 );
+            player1score++;
+            println("p1:" + player1score + "-" + "p2:" + player2score);
+            // p2bombs.remove(0);
+            p2 = new Index( 13, 11 );
+            makeMap();
+      }
+      
+      for(int x=-2; x <= 2; x++){
+        if( x == 0 ) continue;
+        int I = p2bombs.get(i).pos.i + x;
+        if( I < 0 || I > map.length-1 ) continue;
+        if( map[I][p2bombs.get(i).pos.j].tipo == 1 ){
+          map[I][p2bombs.get(i).pos.j].tipo = 0;
+        }
+      }
+      for(int y=-2; y <= 2; y++){
+        if( y == 0 ) continue;
+        int J = p2bombs.get(i).pos.j + y;
+        if( J < 0 || J > map[0].length-1 ) continue;
+        if( map[p2bombs.get(i).pos.i][J].tipo == 1 ){
+          map[p2bombs.get(i).pos.i][J].tipo = 0;
+        }
+      }
+      if(p1bomb == 1){
+        p1bombs.remove(i);
+        p1bomb = 0;
+      }
+      if(p2bomb == 1){
+        p2bombs.remove(i);
+        p2bomb = 0;
+      } 
+
     }
   }
   
