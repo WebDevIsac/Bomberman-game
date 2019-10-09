@@ -5,7 +5,7 @@ class P1Bomb{
     pos = p.get();
     fusivel = millis() + 3000;
   }
-  boolean explodiu(){
+  boolean explode(){
     if( millis() > fusivel ) return true;
     else return false;
   }
@@ -20,7 +20,7 @@ class P2Bomb{
     pos = p.get();
     fusivel = millis() + 3000;
   }
-  boolean explodiu(){
+  boolean explode(){
     if( millis() > fusivel ) return true;
     else return false;
   }
