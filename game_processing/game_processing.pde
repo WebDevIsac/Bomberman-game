@@ -163,34 +163,32 @@ void draw() {
     if( p1bombs.get(i).explode() ){
       if( p1.i == p1bombs.get(i).pos.i &&
           abs( p1.j - p1bombs.get(i).pos.j ) <= 2 ){
-            p1 = new Index( -1, -1 );
+            // p1 = new Index( -1, -1 );
             player1life--;
             if(player1life == 0) {
               player1life = 3;
               player2score++;
+              p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
               makeMap();
             }
-              p1 = new Index( 1, 1 );
             println("p1:" + player1score + "-" + "p2:" + player2score);
             if(p2bomb == 1) {
               p2bombs.remove(i);
               p2bomb = 0;
             }
-            p1 = new Index( 1, 1 );
-            makeMap();
       }
       else if( p1.j == p1bombs.get(i).pos.j &&
           abs( p1.i - p1bombs.get(i).pos.i ) <= 2 ){
-            p1 = new Index( -1, -1 );
+            // p1 = new Index( -1, -1 );
             player1life--;
             if(player1life == 0) {
               player1life = 3;
               player2score++;
+              p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
               makeMap();
             }
-              p1 = new Index( 1, 1 );
             println("p1:" + player1score + "-" + "p2:" + player2score);
             if(p2bomb == 1){
               p2bombs.remove(i);
@@ -199,15 +197,15 @@ void draw() {
       }
       if( p2.i == p1bombs.get(i).pos.i &&
           abs( p2.j - p1bombs.get(i).pos.j ) <= 2 ){
-            p2 = new Index( -1, -1 );
+            // p2 = new Index( -1, -1 );
             player2life--;
             if(player2life == 0) {
               player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
+              p2 = new Index( 17, 17 );
               makeMap();
             }
-              p2 = new Index( 17, 17 );
             println("p1:" + player1score + "-" + "p2:" + player2score);
             if(p2bomb == 1){
               p2bombs.remove(i);
@@ -216,15 +214,15 @@ void draw() {
       }
       else if( p2.j == p1bombs.get(i).pos.j &&
           abs( p2.i - p1bombs.get(i).pos.i ) <= 2 ){
-            p2 = new Index( -1, -1 );
+            // p2 = new Index( -1, -1 );
             player2life--;
             if(player2life == 0) {
               player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
+              p2 = new Index( 17, 17 );
               makeMap();
             }
-              p2 = new Index( 17, 17 );
             println("p1:" + player1score + "-" + "p2:" + player2score);
             if(p2bomb == 1){
               p2bombs.remove(i);
@@ -292,15 +290,15 @@ void draw() {
       
       if( p1.i == p2bombs.get(i).pos.i &&
           abs( p1.j - p2bombs.get(i).pos.j ) <= 2 ){
-            p1 = new Index( -1, -1 );
+            // p1 = new Index( -1, -1 );
             player1life--;
             if (player1life == 0){
               player1life = 3;
               player2score++;
+              p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
               makeMap(); 
             }
-              p1 = new Index( 1, 1 );
             println("p1:" + player1score + "-" + "p2:" + player2score);
             if(p1bomb == 1){
               p1bombs.remove(i);
@@ -309,15 +307,15 @@ void draw() {
       }
       else if( p1.j == p2bombs.get(i).pos.j &&
           abs( p1.i - p2bombs.get(i).pos.i ) <= 2 ){
-            p1 = new Index( -1, -1 );
+            // p1 = new Index( -1, -1 );
             player1life--;
             if (player1life == 0) {
               player1life = 3;
               player2score++;
+              p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
               makeMap();
             }
-              p1 = new Index( 1, 1 );
             println("p1:" + player1score + "-" + "p2:" + player2score);
             if(p1bomb == 1){
               p1bombs.remove(i);
@@ -326,15 +324,15 @@ void draw() {
       }
       if( p2.i == p2bombs.get(i).pos.i &&
           abs( p2.j - p2bombs.get(i).pos.j ) <= 2 ){
-            p2 = new Index( -1, -1 );
+            // p2 = new Index( -1, -1 );
             player2life--;
             if (player2life == 0) {
               player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
+              p2 = new Index( 17, 17 );
               makeMap();
             }
-              p2 = new Index( 17, 17 );
             println("p1:" + player1score + "-" + "p2:" + player2score);
             if(p1bomb == 1){
               p1bombs.remove(i);
@@ -343,15 +341,15 @@ void draw() {
       }
       else if( p2.j == p2bombs.get(i).pos.j &&
           abs( p2.i - p2bombs.get(i).pos.i ) <= 2 ){
-            p2 = new Index( -1, -1 );
+            // p2 = new Index( -1, -1 );
             player2life--;
             if (player2life == 0) {
               player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
+              p2 = new Index( 17, 17 );
               makeMap();
             }
-              p2 = new Index( 17, 17 );
             println("p1:" + player1score + "-" + "p2:" + player2score);
             if(p1bomb == 1){
               p1bombs.remove(i);
