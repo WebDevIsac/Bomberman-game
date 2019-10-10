@@ -5,9 +5,11 @@ float l;
 boolean[] p1c, p2c;
 ArrayList<P1Bomb> p1bombs;
 ArrayList<P2Bomb> p2bombs;
-Serial myPort;
 String arduinoString;
-String valString;
+Serial p1Port;
+Serial p2Port;
+String p1ValString;
+String p2ValString;
 int val;
 int player1score = 0;
 int player2score = 0;
@@ -22,8 +24,10 @@ PImage wallImg;
 PImage pathImg;
 
 void setup() {
-  //String portName = Serial.list()[0];
-  //myPort = new Serial(this, portName, 115200);
+  String p1PortName = Serial.list()[1];
+  p1Port = new Serial(this, p1PortName, 115200);
+  String p2PortName = Serial.list()[0];
+  p2Port = new Serial(this, p2PortName, 230400);
   
   size(800, 800); 
   frameRate(30);
@@ -81,12 +85,15 @@ void makeMap() {
 
 void draw() {
   
-  // if (myPort.available() > 0) { 
-  //    valString = myPort.readString();
-  //    moveChar(valString);
-  //    println(valString);
-  // }
-  
+  if (p1Port.available() > 0 || p2Port.available() > 0) { 
+     p1ValString = p1Port.readString();
+     p2ValString = p2Port.readString();
+    //  println(p1ValString);
+    //  println(p2ValString);
+     if (p1ValString != null) movePlayer1(p1ValString);
+     if (p2ValString != null) movePlayer2(p2ValString);
+  }
+
   for (int x=0; x<map.length ; x++){
     for (int y=0; y<map[0].length ; y++){
       pushMatrix();
@@ -366,6 +373,13 @@ void draw() {
   p1c[2] = false;
   p1c[3] = false;
   p1c[4] = false;
+
+  p2c[0] = false;
+  p2c[1] = false;
+  p2c[2] = false;
+  p2c[3] = false;
+  p2c[4] = false;
+
 
   text("Score: Player one: " + player1score + " Player two: " + player2score, 290,25);
   

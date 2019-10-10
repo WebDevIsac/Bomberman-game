@@ -92,22 +92,22 @@ void printAttitude(float ax, float ay, float az, float mx, float my, float mz)
 
   if (buttonState == 1) {
     // print out the state of the button:
-    Serial.println("BOMB");
+    Serial.println("P1BOMB");
   }
 
   if (pitch > 30) {
-    Serial.println("UP");
+    Serial.print("P1UP");
   }
   if (pitch < -30) {
-    Serial.println("DOWN");
+    Serial.print("P1DOWN");
   }
 
   if (roll > 30) {
-    Serial.println("LEFT");
+    Serial.print("P1LEFT");
   }
   if (roll < -30) {
-    Serial.println("RIGHT");
+    Serial.print("P1RIGHT");
   }
 
-  delay(200);
+  delay(100);
 }
