@@ -17,8 +17,8 @@ LSM9DS1 imu;
 // Example I2C Setup //
 ///////////////////////
 // SDO_XM and SDO_G are both pulled high, so our addresses are:
-#define LSM9DS1_M	0x1E // Would be 0x1C if SDO_M is LOW
-#define LSM9DS1_AG	0x6B // Would be 0x6A if SDO_AG is LOW
+#define LSM9DS1_M  0x1E // Would be 0x1C if SDO_M is LOW
+#define LSM9DS1_AG  0x6B // Would be 0x6A if SDO_AG is LOW
 
 ////////////////////////////
 // Sketch Output Settings //
@@ -33,7 +33,7 @@ void printAttitude(float ax, float ay, float az, float mx, float my, float mz);
 
 void setup() 
 {
-  Serial.begin(115200);
+  Serial.begin(230400);
   
   // Before initializing the IMU, there are a few settings
   // we may need to adjust. Use the settings struct to set
@@ -92,22 +92,22 @@ void printAttitude(float ax, float ay, float az, float mx, float my, float mz)
 
   if (buttonState == 1) {
     // print out the state of the button:
-    Serial.println("BOMB");
+    Serial.print("P2BOMB");
   }
 
   if (pitch > 30) {
-    Serial.println("UP");
+    Serial.print("P2UP");
   }
   if (pitch < -30) {
-    Serial.println("DOWN");
+    Serial.print("P2DOWN");
   }
 
   if (roll > 30) {
-    Serial.println("LEFT");
+    Serial.print("P2LEFT");
   }
   if (roll < -30) {
-    Serial.println("RIGHT");
+    Serial.print("P2RIGHT");
   }
 
-  delay(200);
+  delay(100);
 }
