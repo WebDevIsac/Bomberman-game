@@ -1,4 +1,4 @@
-import processing.serial.*;
+  import processing.serial.*;
 
 Tile[][] map;
 float l;
@@ -150,7 +150,6 @@ void draw() {
             p1 = new Index( -1, -1 );
             player1life--;
             if(player1life == 0) {
-              player1life = 3;
               player2score++;
               p2 = new Index( 17, 17 );
               makeMap();
@@ -167,7 +166,6 @@ void draw() {
             p1 = new Index( -1, -1 );
             player1life--;
             if(player1life == 0) {
-              player1life = 3;
               player2score++;
               p2 = new Index( 17, 17 );
               makeMap();
@@ -184,7 +182,6 @@ void draw() {
             p2 = new Index( -1, -1 );
             player2life--;
             if(player2life == 0) {
-              player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
               makeMap();
@@ -201,7 +198,6 @@ void draw() {
             p2 = new Index( -1, -1 );
             player2life--;
             if(player2life == 0) {
-              player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
               makeMap();
@@ -248,7 +244,6 @@ void draw() {
             p1 = new Index( -1, -1 );
             player1life--;
             if (player1life == 0){
-              player1life = 3;
               player2score++;
               p2 = new Index( 17, 17 );
               makeMap(); 
@@ -265,7 +260,6 @@ void draw() {
             p1 = new Index( -1, -1 );
             player1life--;
             if (player1life == 0) {
-              player1life = 3;
               player2score++;
               p2 = new Index( 17, 17 );
               makeMap();
@@ -282,7 +276,6 @@ void draw() {
             p2 = new Index( -1, -1 );
             player2life--;
             if (player2life == 0) {
-              player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
               makeMap();
@@ -299,7 +292,6 @@ void draw() {
             p2 = new Index( -1, -1 );
             player2life--;
             if (player2life == 0) {
-              player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
               makeMap();
@@ -347,8 +339,5 @@ void draw() {
   p1c[4] = false;
 
   text("Score: Player one: " + player1score + " Player two: " + player2score, 290,25);
-  text("Score: Player one: " + player1score + " Player two: " + player2score, 290,25);
-  text("Player one life: " + player1life, 40,25);
-  text("Player two life: " + player2life, 660,25);
   
 }
