@@ -126,7 +126,6 @@ void draw() {
       p1bomb = 1;
     }
   }
-    
   
   //P2
   // Moving character
@@ -143,6 +142,7 @@ void draw() {
     if (p2c[3]) {
       if (map[p2.i+1][p2.j].atravessavel()) p2.i++; 
     }
+
     // Placing out bomb
     if( p2c[4] && p2bomb == 0){
       p2bombs.add( new P2Bomb( p2 ) );
@@ -156,87 +156,92 @@ void draw() {
   fill(255, 0, 0);
   ellipse( (p2.i + 0.5) * l, (p2.j + 0.5) * l, l, l);
   
-  // For loop for bombs
+  // Start for loop for player 1 bomb
   for(int i = p1bombs.size()-1; i >= 0; --i ){
+    // Shows bomb on map
     p1bombs.get(i).plot();
-    p1bombs.get(i).plot();
+    // If bomb explode
     if( p1bombs.get(i).explode() ){
+      // If bomb hits player 1 in y position
       if( p1.i == p1bombs.get(i).pos.i &&
-          abs( p1.j - p1bombs.get(i).pos.j ) <= 2 ){
-            // p1 = new Index( -1, -1 );
+          abs( p1.j - p1bombs.get(i).pos.j ) <= 3 ){
             player1life--;
             if(player1life == 0) {
               player1life = 3;
               player2score++;
               p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
+              if(p2bomb == 1) {
+                p2bombs.remove(i);
+                p2bomb = 0;
+              }
               makeMap();
             }
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            if(p2bomb == 1) {
-              p2bombs.remove(i);
-              p2bomb = 0;
-            }
       }
+      // If bomb hits player 1 in x position
       else if( p1.j == p1bombs.get(i).pos.j &&
-          abs( p1.i - p1bombs.get(i).pos.i ) <= 2 ){
-            // p1 = new Index( -1, -1 );
+          abs( p1.i - p1bombs.get(i).pos.i ) <= 3 ){
             player1life--;
             if(player1life == 0) {
               player1life = 3;
               player2score++;
               p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
+              if(p2bomb == 1){
+                p2bombs.remove(i);
+                p2bomb = 0;
+              } 
               makeMap();
             }
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            if(p2bomb == 1){
-              p2bombs.remove(i);
-              p2bomb = 0;
-            } 
       }
+      // If bomb hits player 2 in y position
       if( p2.i == p1bombs.get(i).pos.i &&
-          abs( p2.j - p1bombs.get(i).pos.j ) <= 2 ){
-            // p2 = new Index( -1, -1 );
+          abs( p2.j - p1bombs.get(i).pos.j ) <= 3 ){
             player2life--;
             if(player2life == 0) {
               player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
+              if(p2bomb == 1){
+                p2bombs.remove(i);
+                p2bomb = 0;
+              } 
               makeMap();
             }
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            if(p2bomb == 1){
-              p2bombs.remove(i);
-              p2bomb = 0;
-            } 
       }
+      // If bomb hits player 2 in x position
       else if( p2.j == p1bombs.get(i).pos.j &&
-          abs( p2.i - p1bombs.get(i).pos.i ) <= 2 ){
-            // p2 = new Index( -1, -1 );
+          abs( p2.i - p1bombs.get(i).pos.i ) <= 3 ){
             player2life--;
             if(player2life == 0) {
               player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
+              if(p2bomb == 1){
+                p2bombs.remove(i);
+                p2bomb = 0;
+              } 
               makeMap();
             }
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            if(p2bomb == 1){
-              p2bombs.remove(i);
-              p2bomb = 0;
-            } 
       }
       
-      // Removing barrels and setting path instead
+      // Removing barrels and setting path instead in x position
       for (int index = -3; index < 4; index++) {
+
+        // Setting I to bomb x position + index
         int I = p1bombs.get(i).pos.i + index;
+
         if (index == 0) {
           continue;
         }
 
+        // Checking if x position is not outside the map
         if (I < 0 || I > map.length - 1) {
           continue;
         }
@@ -268,13 +273,16 @@ void draw() {
         }
       }
 
+      // Removing barrels and setting path instead in y position
       for (int index = -3; index < 4; index++) {
+        // Setting I to bomb y position + index
         int J = p1bombs.get(i).pos.j + index;
 
         if (index == 0) {
           continue;
         }
 
+        // Checking if x position is not outside the map
         if (J < 0 || J > map.length - 1) {
           continue;
         }
@@ -306,40 +314,40 @@ void draw() {
         }
       }
 
+      // Remove bomb
       if(p1bomb == 1){
         p1bombs.remove(i);
         p1bomb = 0;
       }
-
-
     }
   }
 
-
+  // Starts for loop for player 2 bomb
   for(int i = p2bombs.size()-1; i >= 0; --i ){
+    // Shows bomb on map
     p2bombs.get(i).plot();
+    // If bomb explodes
     if( p2bombs.get(i).explode() ){
-      
+      // If bomb hits player 1 in y position
       if( p1.i == p2bombs.get(i).pos.i &&
-          abs( p1.j - p2bombs.get(i).pos.j ) <= 2 ){
-            // p1 = new Index( -1, -1 );
+          abs( p1.j - p2bombs.get(i).pos.j ) <= 3 ){
             player1life--;
             if (player1life == 0){
               player1life = 3;
               player2score++;
               p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
+              if(p1bomb == 1){
+                p1bombs.remove(i);
+                p1bomb = 0;
+              }
               makeMap(); 
             }
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            if(p1bomb == 1){
-              p1bombs.remove(i);
-              p1bomb = 0;
-            }
       }
+      // If bomb hits player 1 in x position
       else if( p1.j == p2bombs.get(i).pos.j &&
-          abs( p1.i - p2bombs.get(i).pos.i ) <= 2 ){
-            // p1 = new Index( -1, -1 );
+          abs( p1.i - p2bombs.get(i).pos.i ) <= 3 ){
             player1life--;
             if (player1life == 0) {
               player1life = 3;
@@ -347,61 +355,66 @@ void draw() {
               p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
               makeMap();
+              if(p1bomb == 1){
+                p1bombs.remove(i);
+                p1bomb = 0;
+              }
             }
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            if(p1bomb == 1){
-              p1bombs.remove(i);
-              p1bomb = 0;
-            }
       }
+      // If bomb hits player 2 in y position
       if( p2.i == p2bombs.get(i).pos.i &&
-          abs( p2.j - p2bombs.get(i).pos.j ) <= 2 ){
-            // p2 = new Index( -1, -1 );
+          abs( p2.j - p2bombs.get(i).pos.j ) <= 3 ){
             player2life--;
             if (player2life == 0) {
               player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
+              if(p1bomb == 1){
+                p1bombs.remove(i);
+                p1bomb = 0;
+              }
               makeMap();
             }
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            if(p1bomb == 1){
-              p1bombs.remove(i);
-              p1bomb = 0;
-            }
       }
+      // If bomb hits player 2 in x position
       else if( p2.j == p2bombs.get(i).pos.j &&
-          abs( p2.i - p2bombs.get(i).pos.i ) <= 2 ){
-            // p2 = new Index( -1, -1 );
+          abs( p2.i - p2bombs.get(i).pos.i ) <= 3 ){
             player2life--;
             if (player2life == 0) {
               player2life = 3;
               player1score++;
               p1 = new Index( 1, 1 );
               p2 = new Index( 17, 17 );
+              if(p1bomb == 1){
+                p1bombs.remove(i);
+                p1bomb = 0;
+              }
               makeMap();
             }
             println("p1:" + player1score + "-" + "p2:" + player2score);
-            if(p1bomb == 1){
-              p1bombs.remove(i);
-              p1bomb = 0;
-            }
       }
       
-      // Removing barrels and setting path instead
+      // Removing barrels and setting path instead in x position
       for (int index = -3; index < 4; index++) {
+
+        // Setting I to bomb x position + index
         int I = p2bombs.get(i).pos.i + index;
+
         if (index == 0) {
           continue;
         }
 
+        // Checking if x position is not outside the map
         if (I < 0 || I > map.length - 1) {
           continue;
         }
 
         // If x position is a path
         if (map[I][p2bombs.get(i).pos.j].tipo == 0) {
+          // If there is not a wall in the way, explode
           // Checking to the right
           if (map[p2bombs.get(i).pos.i + 1][p2bombs.get(i).pos.j].tipo != 2) {
             image(explosionImg, 42 * I, 42 * p2bombs.get(i).pos.j, 42, 42);
@@ -427,13 +440,16 @@ void draw() {
         }
       }
 
+      // Removing barrels and setting path instead in y position
       for (int index = -3; index < 4; index++) {
+        // Setting I to bomb y position + index
         int J = p2bombs.get(i).pos.j + index;
 
         if (index == 0) {
           continue;
         }
 
+        // Checking if x position is not outside the map
         if (J < 0 || J > map.length - 1) {
           continue;
         }
@@ -465,7 +481,7 @@ void draw() {
         }
       }
 
-
+      // Remove bomb
       if(p2bomb == 1){
         p2bombs.remove(i);
         p2bomb = 0;
@@ -486,10 +502,10 @@ void draw() {
   p2c[3] = false;
   p2c[4] = false;
 
-
+  fill(255);
+  textSize(15);
   text("Score: Player one: " + player1score + " Player two: " + player2score, 290,25);
-  text("Score: Player one: " + player1score + " Player two: " + player2score, 290,25);
-  text("Player one life: " + player1life, 40,25);
-  text("Player two life: " + player2life, 660,25);
+  text("Player one life: " + player1life, 20,25);
+  text("Player two life: " + player2life, 640,25);
   
 }
