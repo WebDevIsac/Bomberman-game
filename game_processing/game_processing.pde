@@ -24,12 +24,13 @@ PImage bombImg;
 PImage barrelImg;
 PImage wallImg;
 PImage pathImg;
+PImage explosionImg;
 
 void setup() {
-  String p1PortName = Serial.list()[1];
-  p1Port = new Serial(this, p1PortName, 115200);
-  String p2PortName = Serial.list()[0];
-  p2Port = new Serial(this, p2PortName, 230400);
+  // String p1PortName = Serial.list()[1];
+  // p1Port = new Serial(this, p1PortName, 115200);
+  // String p2PortName = Serial.list()[0];
+  // p2Port = new Serial(this, p2PortName, 230400);
   
   size(800, 800); 
   frameRate(30);
@@ -48,6 +49,7 @@ void setup() {
   barrelImg = loadImage("barrel.png");
   wallImg = loadImage("wall.png");
   pathImg = loadImage("path.jpg");
+  explosionImg = loadImage("explosion.png");
   
   makeMap();
   
@@ -87,14 +89,12 @@ void makeMap() {
 
 void draw() {
   
-  if (p1Port.available() > 0 || p2Port.available() > 0) { 
-     p1ValString = p1Port.readString();
-     p2ValString = p2Port.readString();
-    //  println(p1ValString);
-    //  println(p2ValString);
-     if (p1ValString != null) movePlayer1(p1ValString);
-     if (p2ValString != null) movePlayer2(p2ValString);
-  }
+  // if (p1Port.available() > 0 || p2Port.available() > 0) { 
+  //    p1ValString = p1Port.readString();
+  //    p2ValString = p2Port.readString();
+  //    if (p1ValString != null) movePlayer1(p1ValString);
+  //    if (p2ValString != null) movePlayer2(p2ValString);
+  // }
 
   for (int x=0; x<map.length ; x++){
     for (int y=0; y<map[0].length ; y++){
@@ -232,49 +232,80 @@ void draw() {
       
       // Removing barrels and setting path instead
       for (int index = -3; index < 4; index++) {
-        // Continue if position is same as bomb placement
+        int I = p1bombs.get(i).pos.i + index;
         if (index == 0) {
           continue;
         }
-        int I = p1bombs.get(i).pos.i + index;
-        int J = p1bombs.get(i).pos.j + index;
-        
-        // Continue if position is outside map
+
         if (I < 0 || I > map.length - 1) {
           continue;
         }
-        if (J < 0 || J > map[0].length - 1) {
-          continue;
-        }
 
+        // If x position is a path
+        if (map[I][p1bombs.get(i).pos.j].tipo == 0) {
+          // Checking to the right
+          if (map[p1bombs.get(i).pos.i + 1][p1bombs.get(i).pos.j].tipo != 2) {
+            image(explosionImg, 42 * I, 42 * p1bombs.get(i).pos.j, 42, 42);
+          }
+          // Checking to the left
+          if (map[p1bombs.get(i).pos.i - 1][p1bombs.get(i).pos.j].tipo != 2) {
+            image(explosionImg, 42 * I, 42 * p1bombs.get(i).pos.j, 42, 42);
+          }
+        }
         // If x position is a barrel
         if (map[I][p1bombs.get(i).pos.j].tipo == 1) {
           // If there is not a wall in the way, remove barrel and set path
           // Checking to the right
           if (map[p1bombs.get(i).pos.i + 1][p1bombs.get(i).pos.j].tipo != 2) {
+            image(explosionImg, 42 * I, 42 * p1bombs.get(i).pos.j, 42, 42);
             map[I][p1bombs.get(i).pos.j].tipo = 0;
           }
           // Checking to the left
           if (map[p1bombs.get(i).pos.i - 1][p1bombs.get(i).pos.j].tipo != 2) {
+            image(explosionImg, 42 * I, 42 * p1bombs.get(i).pos.j, 42, 42);
             map[I][p1bombs.get(i).pos.j].tipo = 0;
           }
         }
+      }
 
+      for (int index = -3; index < 4; index++) {
+        int J = p1bombs.get(i).pos.j + index;
+
+        if (index == 0) {
+          continue;
+        }
+
+        if (J < 0 || J > map.length - 1) {
+          continue;
+        }
+        
+        // If y position is a path
+        if (map[p1bombs.get(i).pos.i][J].tipo == 0) {
+          // Checking below
+          if (map[p1bombs.get(i).pos.i][p1bombs.get(i).pos.j + 1].tipo != 2) {
+            image(explosionImg, 42 * p1bombs.get(i).pos.i, 42 * J, 42, 42);
+          }
+          // Checking above
+          if (map[p1bombs.get(i).pos.i][p1bombs.get(i).pos.j - 1].tipo != 2) {
+            image(explosionImg, 42 * p1bombs.get(i).pos.i, 42 * J, 42, 42);
+          }
+        }
         // If y position is a barrel
         if (map[p1bombs.get(i).pos.i][J].tipo == 1) {
           // If there is not a wall in the way, remove barrel and set path
           // Checking below
           if (map[p1bombs.get(i).pos.i][p1bombs.get(i).pos.j + 1].tipo != 2) {
+            image(explosionImg, 42 * p1bombs.get(i).pos.i, 42 * J, 42, 42);
             map[p1bombs.get(i).pos.i][J].tipo = 0;
           }
           // Checking above
           if (map[p1bombs.get(i).pos.i][p1bombs.get(i).pos.j - 1].tipo != 2) {
+            image(explosionImg, 42 * p1bombs.get(i).pos.i, 42 * J, 42, 42);
             map[p1bombs.get(i).pos.i][J].tipo = 0;
           }
         }
       }
 
-      println(p1bomb);
       if(p1bomb == 1){
         p1bombs.remove(i);
         p1bomb = 0;
@@ -283,6 +314,7 @@ void draw() {
 
     }
   }
+
 
   for(int i = p2bombs.size()-1; i >= 0; --i ){
     p2bombs.get(i).plot();
@@ -359,43 +391,75 @@ void draw() {
       
       // Removing barrels and setting path instead
       for (int index = -3; index < 4; index++) {
-        // Continue if position is same as bomb placement
+        int I = p2bombs.get(i).pos.i + index;
         if (index == 0) {
           continue;
         }
-        int I = p2bombs.get(i).pos.i + index;
-        int J = p2bombs.get(i).pos.j + index;
-        
-        // Continue if position is outside map
+
         if (I < 0 || I > map.length - 1) {
           continue;
         }
-        if (J < 0 || J > map[0].length - 1) {
-          continue;
-        }
 
+        // If x position is a path
+        if (map[I][p2bombs.get(i).pos.j].tipo == 0) {
+          // Checking to the right
+          if (map[p2bombs.get(i).pos.i + 1][p2bombs.get(i).pos.j].tipo != 2) {
+            image(explosionImg, 42 * I, 42 * p2bombs.get(i).pos.j, 42, 42);
+          }
+          // Checking to the left
+          if (map[p2bombs.get(i).pos.i - 1][p2bombs.get(i).pos.j].tipo != 2) {
+            image(explosionImg, 42 * I, 42 * p2bombs.get(i).pos.j, 42, 42);
+          }
+        }
         // If x position is a barrel
         if (map[I][p2bombs.get(i).pos.j].tipo == 1) {
           // If there is not a wall in the way, remove barrel and set path
           // Checking to the right
           if (map[p2bombs.get(i).pos.i + 1][p2bombs.get(i).pos.j].tipo != 2) {
+            image(explosionImg, 42 * I, 42 * p2bombs.get(i).pos.j, 42, 42);
             map[I][p2bombs.get(i).pos.j].tipo = 0;
           }
           // Checking to the left
           if (map[p2bombs.get(i).pos.i - 1][p2bombs.get(i).pos.j].tipo != 2) {
+            image(explosionImg, 42 * I, 42 * p2bombs.get(i).pos.j, 42, 42);
             map[I][p2bombs.get(i).pos.j].tipo = 0;
           }
         }
+      }
 
+      for (int index = -3; index < 4; index++) {
+        int J = p2bombs.get(i).pos.j + index;
+
+        if (index == 0) {
+          continue;
+        }
+
+        if (J < 0 || J > map.length - 1) {
+          continue;
+        }
+        
+        // If y position is a path
+        if (map[p2bombs.get(i).pos.i][J].tipo == 0) {
+          // Checking below
+          if (map[p2bombs.get(i).pos.i][p2bombs.get(i).pos.j + 1].tipo != 2) {
+            image(explosionImg, 42 * p2bombs.get(i).pos.i, 42 * J, 42, 42);
+          }
+          // Checking above
+          if (map[p2bombs.get(i).pos.i][p2bombs.get(i).pos.j - 1].tipo != 2) {
+            image(explosionImg, 42 * p2bombs.get(i).pos.i, 42 * J, 42, 42);
+          }
+        }
         // If y position is a barrel
         if (map[p2bombs.get(i).pos.i][J].tipo == 1) {
           // If there is not a wall in the way, remove barrel and set path
           // Checking below
           if (map[p2bombs.get(i).pos.i][p2bombs.get(i).pos.j + 1].tipo != 2) {
+            image(explosionImg, 42 * p2bombs.get(i).pos.i, 42 * J, 42, 42);
             map[p2bombs.get(i).pos.i][J].tipo = 0;
           }
           // Checking above
           if (map[p2bombs.get(i).pos.i][p2bombs.get(i).pos.j - 1].tipo != 2) {
+            image(explosionImg, 42 * p2bombs.get(i).pos.i, 42 * J, 42, 42);
             map[p2bombs.get(i).pos.i][J].tipo = 0;
           }
         }
