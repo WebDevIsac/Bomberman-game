@@ -109,17 +109,78 @@ void draw() {
   // Moving character
   if( p1.i >= 0 ){
     if (p1c[0]) {
-      if (map[p1.i][p1.j-1].atravessavel()) p1.j--; 
+      boolean move = true;
+      if (map[p1.i][p1.j-1].atravessavel()) {
+        if (p1bomb > 0) {
+          if (p1bombs.get(0).pos.j + 1 == p1.j && p1bombs.get(0).pos.i == p1.i) {
+            move = false;
+          }
+        }
+        if (p2bomb > 0) {
+          if (p2bombs.get(0).pos.j + 1 == p1.j && p2bombs.get(0).pos.i == p1.i) {
+            move = false;
+          }
+        }
+      } else {
+        move = false;
+      }
+      if (move) p1.j--;
     }
     if (p1c[1]) {
-      if (map[p1.i][p1.j+1].atravessavel()) p1.j++; 
+      boolean move = true;
+      if (map[p1.i][p1.j+1].atravessavel()) {
+        if (p1bomb > 0) {
+          if (p1bombs.get(0).pos.j - 1 == p1.j && p1bombs.get(0).pos.i == p1.i) {
+            move = false;
+          } 
+        }
+        if (p2bomb > 0) {
+          if (p2bombs.get(0).pos.j - 1 == p1.j && p2bombs.get(0).pos.i == p1.i) {
+            move = false;
+          } 
+        }
+      } else {
+        move = false;
+      }
+      if (move) p1.j++;
     }
     if (p1c[2]) {
-      if (map[p1.i-1][p1.j].atravessavel()) p1.i--; 
+      boolean move = true;
+      if (map[p1.i-1][p1.j].atravessavel()) {
+        if (p1bomb > 0) {
+          if (p1bombs.get(0).pos.j == p1.j && p1bombs.get(0).pos.i + 1== p1.i) {
+            move = false;
+          }
+        }
+        if (p2bomb > 0) {
+          if (p2bombs.get(0).pos.j == p1.j && p2bombs.get(0).pos.i + 1== p1.i) {
+            move = false;
+          }
+        }
+      } else {
+        move = false;
+      }
+      if (move) p1.i--;
     }
     if (p1c[3]) {
-      if (map[p1.i+1][p1.j].atravessavel()) p1.i++; 
+      boolean move = true;
+      if (map[p1.i+1][p1.j].atravessavel()) {
+        if (p1bomb > 0) {
+          if (p1bombs.get(0).pos.j == p1.j && p1bombs.get(0).pos.i - 1 == p1.i) {
+            move = false;
+          }
+        }
+        if (p2bomb > 0) {
+          if (p2bombs.get(0).pos.j == p1.j && p2bombs.get(0).pos.i - 1== p1.i) {
+            move = false;
+          }
+        }
+      } else {
+        move = false;
+      }
+      if (move) p1.i++;
     }
+
     // Placing out bomb
     if( p1c[4] && p1bomb == 0 ) {
       p1bombs.add( new P1Bomb( p1 ) );
@@ -131,16 +192,76 @@ void draw() {
   // Moving character
   if( p2.i >= 0 ){
     if (p2c[0]) {
-      if (map[p2.i][p2.j-1].atravessavel()) p2.j--; 
+      boolean move = true;
+      if (map[p2.i][p2.j-1].atravessavel()) {
+        if (p1bomb > 0) {
+          if (p1bombs.get(0).pos.j + 1 == p2.j && p1bombs.get(0).pos.i == p2.i) {
+            move = false;
+          }
+        }
+        if (p2bomb > 0) {
+          if (p2bombs.get(0).pos.j + 1 == p2.j && p2bombs.get(0).pos.i == p2.i) {
+            move = false;
+          }
+        }
+      } else {
+        move = false;
+      }
+      if (move) p2.j--;
     }
     if (p2c[1]) {
-      if (map[p2.i][p2.j+1].atravessavel()) p2.j++; 
+      boolean move = true;
+      if (map[p2.i][p2.j+1].atravessavel()) {
+        if (p1bomb > 0) {
+          if (p1bombs.get(0).pos.j - 1 == p2.j && p1bombs.get(0).pos.i == p2.i) {
+            move = false;
+          } 
+        }
+        if (p2bomb > 0) {
+          if (p2bombs.get(0).pos.j - 1 == p2.j && p2bombs.get(0).pos.i == p2.i) {
+            move = false;
+          } 
+        }
+      } else {
+        move = false;
+      }
+      if (move) p2.j++;
     }
     if (p2c[2]) {
-      if (map[p2.i-1][p2.j].atravessavel()) p2.i--; 
+      boolean move = true;
+      if (map[p2.i-1][p2.j].atravessavel()) {
+        if (p1bomb > 0) {
+          if (p1bombs.get(0).pos.j == p2.j && p1bombs.get(0).pos.i + 1== p2.i) {
+            move = false;
+          }
+        }
+        if (p2bomb > 0) {
+          if (p2bombs.get(0).pos.j == p2.j && p2bombs.get(0).pos.i + 1== p2.i) {
+            move = false;
+          }
+        }
+      } else {
+        move = false;
+      }
+      if (move) p2.i--;
     }
     if (p2c[3]) {
-      if (map[p2.i+1][p2.j].atravessavel()) p2.i++; 
+      boolean move = true;
+      if (map[p2.i+1][p2.j].atravessavel()) {
+        if (p1bomb > 0) {
+          if (p1bombs.get(0).pos.j == p2.j && p1bombs.get(0).pos.i - 1 == p2.i) {
+            move = false;
+          }
+        }
+        if (p2bomb > 0) {
+          if (p2bombs.get(0).pos.j == p2.j && p2bombs.get(0).pos.i - 1== p2.i) {
+            move = false;
+          }
+        }
+      } else {
+        move = false;
+      }
+      if (move) p2.i++;
     }
 
     // Placing out bomb
@@ -181,6 +302,18 @@ void draw() {
       else if( p2.j == p1bombs.get(i).pos.j &&
           abs( p2.i - p1bombs.get(i).pos.i ) <= 3 ){
             player2life--;
+      }
+      if(player1life == 0) {
+        player1life = 3;
+        player2life = 3;
+        player1score++;
+        p1 = new Index( 1, 1 );
+        p2 = new Index( 17, 17 );
+        if(p2bomb == 1){
+          p2bombs.remove(i);
+          p2bomb = 0;
+        } 
+        makeMap();
       }
       if(player2life == 0) {
         player1life = 3;
@@ -313,6 +446,18 @@ void draw() {
             player2life--;
       }
 
+      if (player1life == 0) {
+        player1life = 3;
+        player2life = 3;
+        player1score++;
+        p1 = new Index( 1, 1 );
+        p2 = new Index( 17, 17 );
+        if(p1bomb == 1){
+          p1bombs.remove(i);
+          p1bomb = 0;
+        }
+        makeMap();
+      }
       if (player2life == 0) {
         player1life = 3;
         player2life = 3;
