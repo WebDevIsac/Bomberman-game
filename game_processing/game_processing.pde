@@ -306,7 +306,7 @@ void draw() {
       if(player1life == 0) {
         player1life = 3;
         player2life = 3;
-        player1score++;
+        player2score++;
         p1 = new Index( 1, 1 );
         p2 = new Index( 17, 17 );
         if(p2bomb == 1){
@@ -449,7 +449,7 @@ void draw() {
       if (player1life == 0) {
         player1life = 3;
         player2life = 3;
-        player1score++;
+        player2score++;
         p1 = new Index( 1, 1 );
         p2 = new Index( 17, 17 );
         if(p1bomb == 1){
