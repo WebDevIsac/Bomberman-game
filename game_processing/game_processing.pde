@@ -1,4 +1,5 @@
 import processing.serial.*;
+import processing.sound.*;
 
 Tile[][] map;
 float l;
@@ -25,11 +26,13 @@ PImage barrelImg;
 PImage wallImg;
 PImage pathImg;
 PImage explosionImg;
+SoundFile audio;
+SoundFile explosion;
 
 void setup() {
-  // String p1PortName = Serial.list()[1];
+  // String p1PortName = Serial.list()[6];
   // p1Port = new Serial(this, p1PortName, 115200);
-  // String p2PortName = Serial.list()[0];
+  // String p2PortName = Serial.list()[7];
   // p2Port = new Serial(this, p2PortName, 230400);
   
   size(800, 800); 
@@ -50,6 +53,11 @@ void setup() {
   wallImg = loadImage("wall.png");
   pathImg = loadImage("path.jpg");
   explosionImg = loadImage("explosion.png");
+
+  audio = new SoundFile(this, "audio.mp3");
+  explosion = new SoundFile(this, "explosion2.mp3");
+  audio.loop();
+  // audio.amp(0.2);
   
   makeMap();
   
@@ -283,6 +291,7 @@ void draw() {
     p1bombs.get(i).plot();
     // If bomb explode
     if( p1bombs.get(i).explode() ){
+      explosion.play();
       // If bomb hits player 1 in y position
       if( p1.i == p1bombs.get(i).pos.i &&
           abs( p1.j - p1bombs.get(i).pos.j ) <= 3 ){
@@ -303,6 +312,7 @@ void draw() {
           abs( p2.i - p1bombs.get(i).pos.i ) <= 3 ){
             player2life--;
       }
+
       if(player1life == 0) {
         player1life = 3;
         player2life = 3;
@@ -425,6 +435,7 @@ void draw() {
     p2bombs.get(i).plot();
     // If bomb explodes
     if( p2bombs.get(i).explode() ){
+      explosion.play();
       // If bomb hits player 1 in y position
       if( p1.i == p2bombs.get(i).pos.i &&
           abs( p1.j - p2bombs.get(i).pos.j ) <= 3 ){
